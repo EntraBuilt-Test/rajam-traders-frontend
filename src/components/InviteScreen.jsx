@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Clock, ArrowRight, PhoneCall } from 'lucide-react';
 
-export default function InviteScreen({ onContinue, t }) {
+export default function InviteScreen({ onContinue, t, onPauseChange }) {
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  const setPaused = (paused) => {
+    setIsPaused(paused);
+    if (onPauseChange) onPauseChange(paused); // let parent pause/resume the voiceover in sync
+  };
 
   useEffect(() => {
     if (isPaused) return;
@@ -17,18 +22,18 @@ export default function InviteScreen({ onContinue, t }) {
         }
         return prev + 1;
       });
-    }, 50); // 50ms * 100 = 5000ms (5 seconds)
+    }, 150); // 150ms * 100 = 15000ms (15 seconds)
     return () => clearInterval(interval);
   }, [onContinue, isPaused]);
 
   return (
     <div 
       className="w-full max-w-md mx-auto px-4 select-none animate-fade-in active:scale-[0.99] transition-transform duration-200"
-      onMouseDown={() => setIsPaused(true)}
-      onMouseUp={() => setIsPaused(false)}
-      onMouseLeave={() => setIsPaused(false)}
-      onTouchStart={() => setIsPaused(true)}
-      onTouchEnd={() => setIsPaused(false)}
+      onMouseDown={() => setPaused(true)}
+      onMouseUp={() => setPaused(false)}
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => setPaused(false)}
     >
       
       {/* Compact Unified Glassmorphic Card Container */}
