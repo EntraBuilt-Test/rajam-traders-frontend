@@ -4,9 +4,14 @@ import {
   CircleDollarSign, Home, Building2, Sprout 
 } from 'lucide-react';
 
-export default function PromoScreen({ onContinue, t }) {
+export default function PromoScreen({ onContinue, t, onPauseChange }) {
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  const setPaused = (paused) => {
+    setIsPaused(paused);
+    if (onPauseChange) onPauseChange(paused); // let parent pause/resume the voiceover in sync
+  };
 
   useEffect(() => {
     if (isPaused) return;
@@ -20,18 +25,18 @@ export default function PromoScreen({ onContinue, t }) {
         }
         return prev + 1;
       });
-    }, 50); // 50ms * 100 = 5000ms (5 seconds)
+    }, 250); // 250ms * 100 = 25000ms (25 seconds)
     return () => clearInterval(interval);
   }, [onContinue, isPaused]);
 
   return (
     <div 
       className="w-full max-w-xl mx-auto px-4 py-1 space-y-3.5 select-none animate-fade-in active:scale-[0.99] transition-transform duration-200"
-      onMouseDown={() => setIsPaused(true)}
-      onMouseUp={() => setIsPaused(false)}
-      onMouseLeave={() => setIsPaused(false)}
-      onTouchStart={() => setIsPaused(true)}
-      onTouchEnd={() => setIsPaused(false)}
+      onMouseDown={() => setPaused(true)}
+      onMouseUp={() => setPaused(false)}
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => setPaused(false)}
     >
       
       {/* Header Info */}
