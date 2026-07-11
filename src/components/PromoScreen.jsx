@@ -25,7 +25,7 @@ export default function PromoScreen({ onContinue, t, onPauseChange }) {
         }
         return prev + 1;
       });
-    }, 250); // 250ms * 100 = 25000ms (25 seconds)
+    }, 220); // 220ms * 100 = 22000ms (22 seconds)
     return () => clearInterval(interval);
   }, [onContinue, isPaused]);
 
