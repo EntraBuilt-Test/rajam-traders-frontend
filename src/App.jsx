@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import LangToggle from './components/LangToggle';
 import { translations } from './translations';
 import { 
@@ -55,6 +55,7 @@ export default function App() {
   };
 
   const handleRestart = () => {
+    if (audioRef.current) audioRef.current.pause();
     setFormData({
       firstName: '',
       lastName: '',
@@ -70,8 +71,41 @@ export default function App() {
     window.scrollTo({ top: 0 });
   };
 
+  // Voiceover: one continuous track that starts on the Invite (Grand Opening)
+  // screen and keeps playing straight through into the Promo (Mega Opening Day)
+  // screen. It lives here (not inside InviteScreen/PromoScreen) so the same
+  // <audio> element survives the switch between those two screens instead of
+  // being unmounted and restarted.
+  const audioRef = useRef(null);
+
+  const handleVoiceoverPauseChange = (paused) => {
+    if (!audioRef.current) return;
+    if (paused) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(() => {});
+    }
+  };
+
   const handleStartForm = () => {
+    // Kick off the voiceover from the very start, right on the same click that
+    // reveals the Invite screen - this is a real user gesture, so the browser
+    // will allow the audio to autoplay.
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    }
     setSlide(4.2);
+  };
+
+  const handleInviteToPromo = () => {
+    // Don't touch the audio here - let it keep playing uninterrupted into the Promo screen.
+    setSlide(4.5);
+  };
+
+  const handlePromoToVideo = () => {
+    if (audioRef.current) audioRef.current.pause();
+    setSlide(4.8);
   };
 
   const [submitError, setSubmitError] = useState('');
@@ -136,6 +170,11 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen w-full flex flex-col justify-between overflow-x-hidden">
+      {/* Grand Opening + Mega Opening Day voiceover. Rendered once, unconditionally,
+          so it is never unmounted when moving from slide 4.2 to slide 4.5 - that's
+          what lets the narration flow continuously across both screens. */}
+      <audio ref={audioRef} src="/voiceover-grand-opening.mp3" preload="auto" className="hidden" />
+
       {/* Static background image for Welcome, Invite, Promo, and Loading screens */}
       {(slide === 3 || slide === 4 || slide === 4.2 || slide === 4.5) && (
         <div 
@@ -192,11 +231,11 @@ export default function App() {
         )}
 
         {slide === 4.2 && (
-          <InviteScreen onContinue={() => setSlide(4.5)} t={t} />
+          <InviteScreen onContinue={handleInviteToPromo} t={t} onPauseChange={handleVoiceoverPauseChange} />
         )}
 
         {slide === 4.5 && (
-          <PromoScreen onContinue={() => setSlide(4.8)} t={t} />
+          <PromoScreen onContinue={handlePromoToVideo} t={t} onPauseChange={handleVoiceoverPauseChange} />
         )}
 
         {slide === 4.8 && (
