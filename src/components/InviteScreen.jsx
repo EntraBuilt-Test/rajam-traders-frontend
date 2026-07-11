@@ -22,7 +22,7 @@ export default function InviteScreen({ onContinue, t, onPauseChange }) {
         }
         return prev + 1;
       });
-    }, 150); // 150ms * 100 = 15000ms (15 seconds)
+    }, 140); // 140ms * 100 = 14000ms (14 seconds)
     return () => clearInterval(interval);
   }, [onContinue, isPaused]);
 
