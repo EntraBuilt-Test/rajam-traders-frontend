@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import LangToggle from './components/LangToggle';
 import { translations } from './translations';
 import { 
@@ -109,6 +109,20 @@ export default function App() {
   };
 
   const [submitError, setSubmitError] = useState('');
+
+  // Keep the whole window fixed (no page-level scrolling) while the form is
+  // on screen - the form card manages its own height and internal layout.
+  useEffect(() => {
+    if (slide === 5) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [slide]);
+
 
   // The backend URL. In development it falls back to localhost:5000.
   // In production, set VITE_API_URL in your .env file (or in your Vercel
