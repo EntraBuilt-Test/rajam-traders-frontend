@@ -28,16 +28,15 @@ export default function App() {
   const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     phone: '',
-    mobile: '',
     date: '',
     time: '',
     solution: 'on-grid',
     serviceType: 'residential',
     capacity: '3kw',
+    referencedBy: '',
   });
 
   const updateFormData = (newData) => {
@@ -57,14 +56,15 @@ export default function App() {
   const handleRestart = () => {
     if (audioRef.current) audioRef.current.pause();
     setFormData({
-      firstName: '',
-      lastName: '',
+      name: '',
       email: '',
       phone: '',
-      mobile: '',
       date: '',
       time: '',
       solution: 'on-grid',
+      serviceType: 'residential',
+      capacity: '3kw',
+      referencedBy: '',
     });
     setErrors({});
     setSlide(4);
@@ -117,15 +117,9 @@ export default function App() {
 
   const handleSubmit = async () => {
     const finalErrors = {};
-    if (!formData.firstName?.trim()) finalErrors.firstName = t.validationFirstName;
-    if (!formData.lastName?.trim()) finalErrors.lastName = t.validationLastName;
+    if (!formData.name?.trim()) finalErrors.name = t.validationName;
     if (!formData.email?.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
       finalErrors.email = t.validationEmail;
-    }
-    if (!formData.mobile?.trim()) {
-      finalErrors.mobile = t.validationMobile;
-    } else if (formData.mobile.replace(/\D/g, '').length < 8) {
-      finalErrors.mobile = t.validationMobileFormat;
     }
 
     if (Object.keys(finalErrors).length > 0) {
@@ -253,7 +247,7 @@ export default function App() {
 
         {/* Slide 5: Single-page Unified Form layout */}
         {slide === 5 && (
-          <div className="w-full max-w-xl mx-auto py-8 z-30 relative animate-fade-in">
+          <div className="w-full max-w-xl mx-auto py-3 z-30 relative animate-fade-in">
             <UnifiedForm 
               data={formData} 
               updateData={updateFormData} 
