@@ -146,9 +146,6 @@ export default function App() {
     setSubmitError('');
     setSlide(9); // show the "submitting" loader while we wait for the server
 
-    // Keep the loader on screen for at least 1.2s so it doesn't just flash by,
-    // while the real request runs at the same time.
-    const minimumWait = new Promise((resolve) => setTimeout(resolve, 1200));
     const submitRequest = fetch(`${API_URL}/api/submissions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -156,7 +153,7 @@ export default function App() {
     });
 
     try {
-      const [response] = await Promise.all([submitRequest, minimumWait]);
+      const response = await submitRequest;
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
