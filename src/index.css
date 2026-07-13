@@ -173,4 +173,16 @@
   background: rgba(52, 211, 153, 0.55);
 }
 
+/* Fully hides the scrollbar while keeping the element scrollable as a
+   safety net on very short viewports - the form is designed to fit without
+   scrolling, this is just a fallback and should stay invisible. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 
