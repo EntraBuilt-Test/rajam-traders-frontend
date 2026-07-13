@@ -5,6 +5,7 @@ import {
   CheckCircle2, Sparkles, ShieldCheck
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import AppointmentPicker from './AppointmentPicker';
 
 // Slide 3: Loading Screen
 export function LoadingScreen({ onComplete, t }) {
@@ -421,7 +422,6 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
   ];
 
   const [burstId, setBurstId] = useState(null);
-  const [apptFocused, setApptFocused] = useState(false);
 
   const handleCapacityClick = (id) => {
     updateData({ capacity: id });
@@ -431,122 +431,96 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
     }, 500);
   };
 
+  const selectedSolution = options.find((o) => o.id === data.solution);
+  const selectedService = serviceOptions.find((o) => o.id === data.serviceType);
+
   return (
-    <div className="w-full glass-panel rounded-3xl relative transition-all duration-500 flex flex-col max-h-[calc(100vh-200px)] md:max-h-[calc(100vh-220px)] min-h-[420px]">
+    <div className="w-full glass-panel rounded-3xl relative transition-all duration-500 flex flex-col max-h-[calc(100vh-160px)] md:max-h-[calc(100vh-180px)]">
       <div className="absolute top-0 left-0 w-[4px] h-full bg-gradient-to-b from-emerald-500 to-teal-500 rounded-l-3xl"></div>
 
-      <h3 className="text-xl md:text-2xl font-black text-white tracking-wide pl-2 pt-6 md:pt-8 px-6 md:px-8 border-b border-zinc-800/60 pb-3 text-glow shrink-0">
+      <h3 className="text-base md:text-lg font-black text-white tracking-wide pl-2 pt-4 px-5 md:px-6 border-b border-zinc-800/60 pb-2.5 text-glow shrink-0">
         {t.welcomeSubtitle}
       </h3>
 
-      <div className="space-y-5 pl-2 px-6 md:px-8 pb-6 md:pb-8 pt-5 overflow-y-auto custom-scroll flex-1">
+      <div className="space-y-2.5 pl-2 px-5 md:px-6 pb-4 pt-3 overflow-y-auto no-scrollbar flex-1 min-h-0">
         {/* Section 1: Name */}
-        <div className="space-y-3">
-          <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
+        <div className="space-y-1.5">
+          <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.step1Title}
           </h4>
-          <div className="space-y-2">
-            <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.name} *</label>
+          <div className="space-y-1">
             <div className="relative">
-              <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-                <User className="w-5 h-5" />
+              <span className="absolute inset-y-0 left-3.5 flex items-center text-zinc-500">
+                <User className="w-4 h-4" />
               </span>
               <input
                 type="text"
                 placeholder={t.namePlaceholder}
                 value={data.name || ''}
                 onChange={(e) => updateData({ name: e.target.value })}
-                className={`w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base ${errors.name ? 'border-red-500/50 focus:border-red-400' : ''}`}
+                className={`w-full pl-10 pr-4 py-2 rounded-xl glass-input text-sm ${errors.name ? 'border-red-500/50 focus:border-red-400' : ''}`}
               />
             </div>
-            {errors.name && <p className="text-red-400 text-xs mt-1 font-medium">{errors.name}</p>}
+            {errors.name && <p className="text-red-400 text-[10px] font-medium">{errors.name}</p>}
           </div>
         </div>
 
         {/* Section 2: Contact */}
-        <div className="space-y-3 pt-1">
-          <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
+        <div className="space-y-1.5">
+          <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.step2Title}
           </h4>
-          <div className="space-y-3">
-            <div className="space-y-2">
-              <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.email} *</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+            <div className="space-y-1">
               <div className="relative">
-                <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-                  <Mail className="w-5 h-5" />
+                <span className="absolute inset-y-0 left-3.5 flex items-center text-zinc-500">
+                  <Mail className="w-4 h-4" />
                 </span>
                 <input
                   type="email"
                   placeholder={t.emailPlaceholder}
                   value={data.email || ''}
                   onChange={(e) => updateData({ email: e.target.value })}
-                  className={`w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base ${errors.email ? 'border-red-500/50 focus:border-red-400' : ''}`}
+                  className={`w-full pl-10 pr-4 py-2 rounded-xl glass-input text-sm ${errors.email ? 'border-red-500/50 focus:border-red-400' : ''}`}
                 />
               </div>
-              {errors.email && <p className="text-red-400 text-xs mt-1 font-medium">{errors.email}</p>}
+              {errors.email && <p className="text-red-400 text-[10px] font-medium">{errors.email}</p>}
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.phone}</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-                  <Phone className="w-5 h-5" />
-                </span>
-                <input
-                  type="tel"
-                  placeholder={t.phonePlaceholder}
-                  value={data.phone || ''}
-                  onChange={(e) => updateData({ phone: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base"
-                />
-              </div>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-3.5 flex items-center text-zinc-500">
+                <Phone className="w-4 h-4" />
+              </span>
+              <input
+                type="tel"
+                placeholder={t.phonePlaceholder}
+                value={data.phone || ''}
+                onChange={(e) => updateData({ phone: e.target.value })}
+                className="w-full pl-10 pr-4 py-2 rounded-xl glass-input text-sm"
+              />
             </div>
           </div>
         </div>
 
-        {/* Section 3: Appointment - date + time merged into a single animated box */}
-        <div className="space-y-3 pt-1">
-          <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
+        {/* Section 3: Appointment - opens a real calendar + time-slot popover */}
+        <div className="space-y-1.5">
+          <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.step3Title}
           </h4>
-          <div className="space-y-2">
-            <div
-              className={`group flex items-stretch rounded-2xl glass-input overflow-hidden divide-x divide-emerald-500/20 transition-all duration-300 ease-out ${
-                apptFocused ? 'scale-[1.015] border-emerald-400 shadow-lg shadow-emerald-500/20' : 'hover:scale-[1.008] hover:shadow-md hover:shadow-emerald-500/10'
-              }`}
-            >
-              <label className="flex items-center gap-2 flex-1 px-4 py-3 cursor-text">
-                <Calendar className="w-5 h-5 text-emerald-400 shrink-0 transition-transform duration-300 group-hover:-rotate-6" />
-                <input
-                  type="date"
-                  value={data.date || ''}
-                  onChange={(e) => updateData({ date: e.target.value })}
-                  onFocus={() => setApptFocused(true)}
-                  onBlur={() => setApptFocused(false)}
-                  className="w-full bg-transparent outline-none text-sm md:text-base text-white [color-scheme:dark]"
-                />
-              </label>
-              <label className="flex items-center gap-2 flex-1 px-4 py-3 cursor-text">
-                <Clock className="w-5 h-5 text-emerald-400 shrink-0 transition-transform duration-300 group-hover:rotate-12" />
-                <input
-                  type="time"
-                  value={data.time || ''}
-                  onChange={(e) => updateData({ time: e.target.value })}
-                  onFocus={() => setApptFocused(true)}
-                  onBlur={() => setApptFocused(false)}
-                  className="w-full bg-transparent outline-none text-sm md:text-base text-white [color-scheme:dark]"
-                />
-              </label>
-            </div>
-          </div>
+          <AppointmentPicker
+            date={data.date}
+            time={data.time}
+            onChange={(d, tm) => updateData({ date: d, time: tm })}
+            t={t}
+          />
         </div>
 
-        {/* Section 4: Solar Solution */}
-        <div className="space-y-3 pt-1">
-          <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
+        {/* Section 4: Solar Solution - compact 3-way toggle */}
+        <div className="space-y-1.5">
+          <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.step4Title}
           </h4>
-          <div className="grid grid-cols-1 gap-2.5">
+          <div className="grid grid-cols-3 gap-1.5">
             {options.map((opt) => {
               const selected = data.solution === opt.id;
               return (
@@ -554,37 +528,28 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
                   key={opt.id}
                   type="button"
                   onClick={() => updateData({ solution: opt.id })}
-                  className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-300 flex items-start gap-4 cursor-pointer ${
+                  className={`py-2 px-1.5 rounded-xl border text-center text-[11px] font-bold transition-all duration-200 cursor-pointer ${
                     selected
-                      ? 'border-emerald-400 bg-emerald-950/20 shadow-md shadow-emerald-500/5'
-                      : 'border-zinc-800 bg-zinc-950/20 hover:border-zinc-700/60'
+                      ? 'electric-active shadow-md'
+                      : 'border-zinc-800 bg-zinc-950/20 text-zinc-300 hover:border-zinc-700/60'
                   }`}
                 >
-                  <div className={`mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                    selected ? 'border-emerald-400' : 'border-zinc-600'
-                  }`}>
-                    {selected && <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />}
-                  </div>
-                  <div>
-                    <h4 className={`font-bold text-sm tracking-wide ${selected ? 'text-emerald-300' : 'text-white'}`}>
-                      {opt.label}
-                    </h4>
-                    <p className="text-zinc-400 text-xs mt-1 leading-normal">
-                      {opt.desc}
-                    </p>
-                  </div>
+                  {opt.label}
                 </button>
               );
             })}
           </div>
+          {selectedSolution && (
+            <p className="text-zinc-400 text-[10px] leading-snug pl-1 truncate">{selectedSolution.desc}</p>
+          )}
         </div>
 
-        {/* Section 5: Service Type */}
-        <div className="space-y-3 pt-1">
-          <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
+        {/* Section 5: Service Type - compact 3-way toggle */}
+        <div className="space-y-1.5">
+          <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.serviceType}
           </h4>
-          <div className="grid grid-cols-1 gap-2.5">
+          <div className="grid grid-cols-3 gap-1.5">
             {serviceOptions.map((opt) => {
               const selected = data.serviceType === opt.id;
               return (
@@ -592,37 +557,28 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
                   key={opt.id}
                   type="button"
                   onClick={() => updateData({ serviceType: opt.id })}
-                  className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-300 flex items-start gap-4 cursor-pointer ${
+                  className={`py-2 px-1.5 rounded-xl border text-center text-[11px] font-bold transition-all duration-200 cursor-pointer ${
                     selected
-                      ? 'border-emerald-400 bg-emerald-950/20 shadow-md shadow-emerald-500/5'
-                      : 'border-zinc-800 bg-zinc-950/20 hover:border-zinc-700/60'
+                      ? 'electric-active shadow-md'
+                      : 'border-zinc-800 bg-zinc-950/20 text-zinc-300 hover:border-zinc-700/60'
                   }`}
                 >
-                  <div className={`mt-1 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                    selected ? 'border-emerald-400' : 'border-zinc-600'
-                  }`}>
-                    {selected && <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />}
-                  </div>
-                  <div>
-                    <h4 className={`font-bold text-sm tracking-wide ${selected ? 'text-emerald-300' : 'text-white'}`}>
-                      {opt.label}
-                    </h4>
-                    <p className="text-zinc-400 text-xs mt-1 leading-normal">
-                      {opt.desc}
-                    </p>
-                  </div>
+                  {opt.label}
                 </button>
               );
             })}
           </div>
+          {selectedService && (
+            <p className="text-zinc-400 text-[10px] leading-snug pl-1 truncate">{selectedService.desc}</p>
+          )}
         </div>
 
         {/* Section 6: System Capacity */}
-        <div className="space-y-3 pt-1">
-          <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
+        <div className="space-y-1.5">
+          <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.systemCapacity}
           </h4>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-1.5">
             {capacityOptions.map((opt) => {
               const selected = data.capacity === opt.id;
               const isBursting = burstId === opt.id;
@@ -631,11 +587,11 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
                   key={opt.id}
                   type="button"
                   onClick={() => handleCapacityClick(opt.id)}
-                  className={`text-center py-2.5 px-3 rounded-xl border text-xs font-bold transition-all duration-200 cursor-pointer ${
+                  className={`text-center py-1.5 px-1 rounded-lg border text-[10px] font-bold transition-all duration-200 cursor-pointer ${
                     selected
                       ? 'electric-active shadow-md'
                       : 'border-zinc-800 bg-zinc-950/20 text-zinc-300 hover:border-zinc-700/60'
-                  } ${isBursting ? 'electric-burst' : ''} ${opt.id === 'not-sure' ? 'col-span-2 sm:col-span-1' : ''}`}
+                  } ${isBursting ? 'electric-burst' : ''} ${opt.id === 'not-sure' ? 'col-span-2' : ''}`}
                 >
                   {opt.label}
                 </button>
@@ -645,41 +601,40 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
         </div>
 
         {/* Section 7: Referenced By */}
-        <div className="space-y-3 pt-1">
-          <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
+        <div className="space-y-1.5">
+          <h4 className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.referencedBy}
           </h4>
-          <div className="space-y-2">
-            <div className="relative">
-              <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-                <Sparkles className="w-5 h-5" />
-              </span>
-              <input
-                type="text"
-                placeholder={t.referencedByPlaceholder}
-                value={data.referencedBy || ''}
-                onChange={(e) => updateData({ referencedBy: e.target.value })}
-                className="w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base"
-              />
-            </div>
+          <div className="relative">
+            <span className="absolute inset-y-0 left-3.5 flex items-center text-zinc-500">
+              <Sparkles className="w-4 h-4" />
+            </span>
+            <input
+              type="text"
+              placeholder={t.referencedByPlaceholder}
+              value={data.referencedBy || ''}
+              onChange={(e) => updateData({ referencedBy: e.target.value })}
+              className="w-full pl-10 pr-4 py-2 rounded-xl glass-input text-sm"
+            />
           </div>
         </div>
 
-        {/* Submit */}
         {submitError && (
-          <div className="rounded-2xl border border-red-500/40 bg-red-950/30 px-4 py-3 text-sm text-red-300">
+          <div className="rounded-xl border border-red-500/40 bg-red-950/30 px-3 py-2 text-xs text-red-300">
             {submitError}
           </div>
         )}
-        <div className="flex justify-end pt-5 border-t border-zinc-800/60 mt-5">
-          <button
-            onClick={onSubmit}
-            className="py-3.5 px-10 rounded-full font-bold text-[#0d130e] bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-500/20 text-base"
-          >
-            <span>{t.submit}</span>
-            <ArrowRight className="w-5 h-5" />
-          </button>
-        </div>
+      </div>
+
+      {/* Submit stays pinned at the bottom of the fixed-height card */}
+      <div className="shrink-0 flex justify-end px-5 md:px-6 py-3 border-t border-zinc-800/60">
+        <button
+          onClick={onSubmit}
+          className="py-2.5 px-8 rounded-full font-bold text-[#0d130e] bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-500/20 text-sm"
+        >
+          <span>{t.submit}</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );
