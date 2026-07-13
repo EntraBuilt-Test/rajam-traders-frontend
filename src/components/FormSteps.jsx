@@ -118,40 +118,21 @@ export function StepNameSection({ data, updateData, errors, onContinue, t, isUnl
       continueLabel={t.continue}
       isDisabled={!isUnlocked}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label className="block text-xs md:text-sm font-semibold text-zinc-300 tracking-wide">{t.firstName} *</label>
-          <div className="relative">
-            <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-              <User className="w-5 h-5" />
-            </span>
-            <input
-              type="text"
-              placeholder={t.firstNamePlaceholder}
-              value={data.firstName || ''}
-              onChange={(e) => updateData({ firstName: e.target.value })}
-              className={`w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base ${errors.firstName ? 'border-red-500/50 focus:border-red-400' : ''}`}
-            />
-          </div>
-          {errors.firstName && <p className="text-red-400 text-xs mt-1 font-medium">{errors.firstName}</p>}
+      <div className="space-y-2">
+        <label className="block text-xs md:text-sm font-semibold text-zinc-300 tracking-wide">{t.name} *</label>
+        <div className="relative">
+          <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
+            <User className="w-5 h-5" />
+          </span>
+          <input
+            type="text"
+            placeholder={t.namePlaceholder}
+            value={data.name || ''}
+            onChange={(e) => updateData({ name: e.target.value })}
+            className={`w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base ${errors.name ? 'border-red-500/50 focus:border-red-400' : ''}`}
+          />
         </div>
-
-        <div className="space-y-2">
-          <label className="block text-xs md:text-sm font-semibold text-zinc-300 tracking-wide">{t.lastName} *</label>
-          <div className="relative">
-            <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-              <User className="w-5 h-5" />
-            </span>
-            <input
-              type="text"
-              placeholder={t.lastNamePlaceholder}
-              value={data.lastName || ''}
-              onChange={(e) => updateData({ lastName: e.target.value })}
-              className={`w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base ${errors.lastName ? 'border-red-500/50 focus:border-red-400' : ''}`}
-            />
-          </div>
-          {errors.lastName && <p className="text-red-400 text-xs mt-1 font-medium">{errors.lastName}</p>}
-        </div>
+        {errors.name && <p className="text-red-400 text-xs mt-1 font-medium">{errors.name}</p>}
       </div>
     </FormCard>
   );
@@ -185,38 +166,19 @@ export function StepContactSection({ data, updateData, errors, onContinue, t, is
           {errors.email && <p className="text-red-400 text-xs mt-1 font-medium">{errors.email}</p>}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label className="block text-xs md:text-sm font-semibold text-zinc-300 tracking-wide">{t.phone}</label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-                <Phone className="w-5 h-5" />
-              </span>
-              <input
-                type="tel"
-                placeholder={t.phonePlaceholder}
-                value={data.phone || ''}
-                onChange={(e) => updateData({ phone: e.target.value })}
-                className="w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="block text-xs md:text-sm font-semibold text-zinc-300 tracking-wide">{t.mobile} *</label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-                <Phone className="w-5 h-5" />
-              </span>
-              <input
-                type="tel"
-                placeholder={t.mobilePlaceholder}
-                value={data.mobile || ''}
-                onChange={(e) => updateData({ mobile: e.target.value })}
-                className={`w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base ${errors.mobile ? 'border-red-500/50 focus:border-red-400' : ''}`}
-              />
-            </div>
-            {errors.mobile && <p className="text-red-400 text-xs mt-1 font-medium">{errors.mobile}</p>}
+        <div className="space-y-2">
+          <label className="block text-xs md:text-sm font-semibold text-zinc-300 tracking-wide">{t.phone}</label>
+          <div className="relative">
+            <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
+              <Phone className="w-5 h-5" />
+            </span>
+            <input
+              type="tel"
+              placeholder={t.phonePlaceholder}
+              value={data.phone || ''}
+              onChange={(e) => updateData({ phone: e.target.value })}
+              className="w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base"
+            />
           </div>
         </div>
       </div>
@@ -407,7 +369,7 @@ export function FinalConfirmation({ onRestart, t }) {
 
       <div className="border-t border-zinc-800/80 pt-6 space-y-3 text-left text-xs text-zinc-400">
         <div className="flex justify-between">
-          <span>{t.firstName}:</span>
+          <span>{t.name}:</span>
           <span className="text-zinc-200 font-medium">RTS Green Solar Energy Solutions</span>
         </div>
         <div className="flex justify-between">
@@ -459,6 +421,7 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
   ];
 
   const [burstId, setBurstId] = useState(null);
+  const [apptFocused, setApptFocused] = useState(false);
 
   const handleCapacityClick = (id) => {
     updateData({ capacity: id });
@@ -468,65 +431,44 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
     }, 500);
   };
 
-
-
   return (
-    <div className="w-full glass-panel p-6 md:p-8 rounded-3xl relative overflow-hidden transition-all duration-500">
-      <div className="absolute top-0 left-0 w-[4px] h-full bg-gradient-to-b from-emerald-500 to-teal-500"></div>
-      
-      <h3 className="text-xl md:text-2xl font-black text-white mb-6 tracking-wide pl-2 border-b border-zinc-800/60 pb-3 text-glow">
+    <div className="w-full glass-panel rounded-3xl relative transition-all duration-500 flex flex-col max-h-[calc(100vh-200px)] md:max-h-[calc(100vh-220px)] min-h-[420px]">
+      <div className="absolute top-0 left-0 w-[4px] h-full bg-gradient-to-b from-emerald-500 to-teal-500 rounded-l-3xl"></div>
+
+      <h3 className="text-xl md:text-2xl font-black text-white tracking-wide pl-2 pt-6 md:pt-8 px-6 md:px-8 border-b border-zinc-800/60 pb-3 text-glow shrink-0">
         {t.welcomeSubtitle}
       </h3>
 
-      <div className="space-y-6 pl-2">
+      <div className="space-y-5 pl-2 px-6 md:px-8 pb-6 md:pb-8 pt-5 overflow-y-auto custom-scroll flex-1">
         {/* Section 1: Name */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.step1Title}
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.firstName} *</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-                  <User className="w-5 h-5" />
-                </span>
-                <input
-                  type="text"
-                  placeholder={t.firstNamePlaceholder}
-                  value={data.firstName || ''}
-                  onChange={(e) => updateData({ firstName: e.target.value })}
-                  className={`w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base ${errors.firstName ? 'border-red-500/50 focus:border-red-400' : ''}`}
-                />
-              </div>
-              {errors.firstName && <p className="text-red-400 text-xs mt-1 font-medium">{errors.firstName}</p>}
+          <div className="space-y-2">
+            <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.name} *</label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
+                <User className="w-5 h-5" />
+              </span>
+              <input
+                type="text"
+                placeholder={t.namePlaceholder}
+                value={data.name || ''}
+                onChange={(e) => updateData({ name: e.target.value })}
+                className={`w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base ${errors.name ? 'border-red-500/50 focus:border-red-400' : ''}`}
+              />
             </div>
-
-            <div className="space-y-2">
-              <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.lastName} *</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-                  <User className="w-5 h-5" />
-                </span>
-                <input
-                  type="text"
-                  placeholder={t.lastNamePlaceholder}
-                  value={data.lastName || ''}
-                  onChange={(e) => updateData({ lastName: e.target.value })}
-                  className={`w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base ${errors.lastName ? 'border-red-500/50 focus:border-red-400' : ''}`}
-                />
-              </div>
-              {errors.lastName && <p className="text-red-400 text-xs mt-1 font-medium">{errors.lastName}</p>}
-            </div>
+            {errors.name && <p className="text-red-400 text-xs mt-1 font-medium">{errors.name}</p>}
           </div>
         </div>
 
         {/* Section 2: Contact */}
-        <div className="space-y-4 pt-2">
+        <div className="space-y-3 pt-1">
           <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.step2Title}
           </h4>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="space-y-2">
               <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.email} *</label>
               <div className="relative">
@@ -544,87 +486,67 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
               {errors.email && <p className="text-red-400 text-xs mt-1 font-medium">{errors.email}</p>}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.phone}</label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-                    <Phone className="w-5 h-5" />
-                  </span>
-                  <input
-                    type="tel"
-                    placeholder={t.phonePlaceholder}
-                    value={data.phone || ''}
-                    onChange={(e) => updateData({ phone: e.target.value })}
-                    className="w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.mobile} *</label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
-                    <Phone className="w-5 h-5" />
-                  </span>
-                  <input
-                    type="tel"
-                    placeholder={t.mobilePlaceholder}
-                    value={data.mobile || ''}
-                    onChange={(e) => updateData({ mobile: e.target.value })}
-                    className={`w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base ${errors.mobile ? 'border-red-500/50 focus:border-red-400' : ''}`}
-                  />
-                </div>
-                {errors.mobile && <p className="text-red-400 text-xs mt-1 font-medium">{errors.mobile}</p>}
+            <div className="space-y-2">
+              <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.phone}</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
+                  <Phone className="w-5 h-5" />
+                </span>
+                <input
+                  type="tel"
+                  placeholder={t.phonePlaceholder}
+                  value={data.phone || ''}
+                  onChange={(e) => updateData({ phone: e.target.value })}
+                  className="w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base"
+                />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Section 3: Appointment */}
-        <div className="space-y-4 pt-2">
+        {/* Section 3: Appointment - date + time merged into a single animated box */}
+        <div className="space-y-3 pt-1">
           <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.step3Title}
           </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.selectDate}</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500 pointer-events-none">
-                  <Calendar className="w-5 h-5" />
-                </span>
+          <div className="space-y-2">
+            <div
+              className={`group flex items-stretch rounded-2xl glass-input overflow-hidden divide-x divide-emerald-500/20 transition-all duration-300 ease-out ${
+                apptFocused ? 'scale-[1.015] border-emerald-400 shadow-lg shadow-emerald-500/20' : 'hover:scale-[1.008] hover:shadow-md hover:shadow-emerald-500/10'
+              }`}
+            >
+              <label className="flex items-center gap-2 flex-1 px-4 py-3 cursor-text">
+                <Calendar className="w-5 h-5 text-emerald-400 shrink-0 transition-transform duration-300 group-hover:-rotate-6" />
                 <input
                   type="date"
                   value={data.date || ''}
                   onChange={(e) => updateData({ date: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base"
+                  onFocus={() => setApptFocused(true)}
+                  onBlur={() => setApptFocused(false)}
+                  className="w-full bg-transparent outline-none text-sm md:text-base text-white [color-scheme:dark]"
                 />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-xs font-semibold text-zinc-300 tracking-wide">{t.selectTime}</label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500 pointer-events-none">
-                  <Clock className="w-5 h-5" />
-                </span>
+              </label>
+              <label className="flex items-center gap-2 flex-1 px-4 py-3 cursor-text">
+                <Clock className="w-5 h-5 text-emerald-400 shrink-0 transition-transform duration-300 group-hover:rotate-12" />
                 <input
                   type="time"
                   value={data.time || ''}
                   onChange={(e) => updateData({ time: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base"
+                  onFocus={() => setApptFocused(true)}
+                  onBlur={() => setApptFocused(false)}
+                  className="w-full bg-transparent outline-none text-sm md:text-base text-white [color-scheme:dark]"
                 />
-              </div>
+              </label>
             </div>
           </div>
         </div>
 
         {/* Section 4: Solar Solution */}
-        <div className="space-y-4 pt-2">
+        <div className="space-y-3 pt-1">
           <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.step4Title}
           </h4>
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 gap-2.5">
             {options.map((opt) => {
               const selected = data.solution === opt.id;
               return (
@@ -632,8 +554,8 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
                   key={opt.id}
                   type="button"
                   onClick={() => updateData({ solution: opt.id })}
-                  className={`w-full text-left p-4 rounded-2xl border transition-all duration-300 flex items-start gap-4 cursor-pointer ${
-                    selected 
+                  className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-300 flex items-start gap-4 cursor-pointer ${
+                    selected
                       ? 'border-emerald-400 bg-emerald-950/20 shadow-md shadow-emerald-500/5'
                       : 'border-zinc-800 bg-zinc-950/20 hover:border-zinc-700/60'
                   }`}
@@ -658,11 +580,11 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
         </div>
 
         {/* Section 5: Service Type */}
-        <div className="space-y-4 pt-2">
+        <div className="space-y-3 pt-1">
           <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.serviceType}
           </h4>
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 gap-2.5">
             {serviceOptions.map((opt) => {
               const selected = data.serviceType === opt.id;
               return (
@@ -670,8 +592,8 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
                   key={opt.id}
                   type="button"
                   onClick={() => updateData({ serviceType: opt.id })}
-                  className={`w-full text-left p-4 rounded-2xl border transition-all duration-300 flex items-start gap-4 cursor-pointer ${
-                    selected 
+                  className={`w-full text-left p-3.5 rounded-2xl border transition-all duration-300 flex items-start gap-4 cursor-pointer ${
+                    selected
                       ? 'border-emerald-400 bg-emerald-950/20 shadow-md shadow-emerald-500/5'
                       : 'border-zinc-800 bg-zinc-950/20 hover:border-zinc-700/60'
                   }`}
@@ -696,7 +618,7 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
         </div>
 
         {/* Section 6: System Capacity */}
-        <div className="space-y-4 pt-2">
+        <div className="space-y-3 pt-1">
           <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
             {t.systemCapacity}
           </h4>
@@ -710,7 +632,7 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
                   type="button"
                   onClick={() => handleCapacityClick(opt.id)}
                   className={`text-center py-2.5 px-3 rounded-xl border text-xs font-bold transition-all duration-200 cursor-pointer ${
-                    selected 
+                    selected
                       ? 'electric-active shadow-md'
                       : 'border-zinc-800 bg-zinc-950/20 text-zinc-300 hover:border-zinc-700/60'
                   } ${isBursting ? 'electric-burst' : ''} ${opt.id === 'not-sure' ? 'col-span-2 sm:col-span-1' : ''}`}
@@ -722,13 +644,34 @@ export function UnifiedForm({ data, updateData, errors, onSubmit, t, submitError
           </div>
         </div>
 
+        {/* Section 7: Referenced By */}
+        <div className="space-y-3 pt-1">
+          <h4 className="text-sm font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-2">
+            {t.referencedBy}
+          </h4>
+          <div className="space-y-2">
+            <div className="relative">
+              <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
+                <Sparkles className="w-5 h-5" />
+              </span>
+              <input
+                type="text"
+                placeholder={t.referencedByPlaceholder}
+                value={data.referencedBy || ''}
+                onChange={(e) => updateData({ referencedBy: e.target.value })}
+                className="w-full pl-12 pr-4 py-3 rounded-2xl glass-input text-base"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Submit */}
         {submitError && (
           <div className="rounded-2xl border border-red-500/40 bg-red-950/30 px-4 py-3 text-sm text-red-300">
             {submitError}
           </div>
         )}
-        <div className="flex justify-end pt-6 border-t border-zinc-800/60 mt-6">
+        <div className="flex justify-end pt-5 border-t border-zinc-800/60 mt-5">
           <button
             onClick={onSubmit}
             className="py-3.5 px-10 rounded-full font-bold text-[#0d130e] bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-500/20 text-base"
